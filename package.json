@@ -7,7 +7,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/chenfli/M2X-Node-Red.git"
+    "url": "https://github.com/attm2x/node-red-m2x.git"
   },
   "license": "Apache",
   "keywords": [
