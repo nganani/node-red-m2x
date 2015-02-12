@@ -1,0 +1,26 @@
+{
+  "name": "node-red-m2x",
+  "version": "0.0.17",
+  "description": "A Node-RED node to AT&T M2X",
+  "dependencies": {
+    "m2x": "2.1.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chenfli/M2X-Node-Red.git"
+  },
+  "license": "Apache",
+  "keywords": [
+    "node-red",
+    "m2x"
+  ],
+  "node-red": {
+    "nodes": {
+      "m2x": "m2x.js"
+    }
+  },
+  "author": {
+    "name": "Chen Fliesher",
+    "email": "chenfli@gmail.com"
+  }
+}
