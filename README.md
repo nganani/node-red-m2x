@@ -1,8 +1,10 @@
 node-red-m2x
 =================
-A <a href="http://nodered.org" target="_new">Node-RED</a> node to store in <a href="http://m2x.att.com" target="_new">M2X</a>.
+A <a href="http://nodered.org" target="_new">Node-RED</a> node used to store data in <a href="https://m2x.att.com" target="_new">AT&T M2X</a> using Node-RED or <a href="http://flow.att.com">AT&T Flow Designer</a>.
 
-Install
+[AT&T M2X](http://m2x.att.com) is a cloud-based fully managed time-series data storage service for network connected machine-to-machine (M2M) devices and the Internet of Things (IoT).
+
+Installation
 -------
 
 Run the following command in the root directory of your Node-RED Directory
@@ -13,7 +15,7 @@ Usage
 -----
 
 <div>
-The user will set the following message proprties:
+The user will set the following message properties:
 
 <ul>
     <li><b>msg.topic</b> - (required)
@@ -24,11 +26,11 @@ The user will set the following message proprties:
     <li><b>msg.sub_topic_id</b> - (optional)
 </ul>
 <ul>
-    <li> msg.topic - The type of object to act on - distribution,device,chart.key.
+    <li> msg.topic - The type of object to act on - distribution, device, chart, key.
     <li> msg.action - An action to be applied for this type of object - The second level entry in the below list. (catalog for example)
-    <li> msg.payload - A json that represent the body for the rest API, only if such is defiend.
-    <li> msg.topic_id - a unique id for either device,distribution,key or chart
-    <li> msg.sub_topic_id - define the a unique instance of sub topic such as distributon's device. 
+    <li> msg.payload - A json that represents the body for the rest API, only if such is defiend.
+    <li> msg.topic_id - A unique id for either device, distribution, key or chart
+    <li> msg.sub_topic_id - Defines the unique instance of sub topic such as distributon's device. 
 
     <ul>
         <li><b>devices</b>
@@ -387,9 +389,9 @@ The user will set the following message proprties:
 </ul>    
     <div>
     <H3>Authentication</H3>
-    There are 2 ways to pass authentication using the flow designer M2X Node.
+    <p>There are two ways to pass authentication using the M2X Node:<p>
     <ul>
-        <li>Used the node configuration and set the relevant X-M2X-KEY.
+        <li>Use the node configuration and set the relevant X-M2X-KEY.
         <li>Pass the X-M2X-KEY via msg.m2x_key.
     </ul>
     </div>
@@ -409,8 +411,8 @@ msg.payload = { "stream": "heat",  <br>
   "callback_url": "http://example.com", <br>
   "status": "enabled",  <br>
   "send_location": true }; <br>
-
     </pre>
+    
     <H4> Show device Details<H4>    
     <H5> Function Code </H5>
     <pre>
@@ -421,3 +423,7 @@ msg.payload = { "stream": "heat",  <br>
     </pre>
     </div>
 </div>       
+
+## License ##
+
+This software is provided under the MIT license. See [LICENSE](LICENSE) for applicable terms.
