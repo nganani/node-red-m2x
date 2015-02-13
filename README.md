@@ -7,7 +7,7 @@ A <a href="http://nodered.org" target="_new">Node-RED</a> node used to store tim
 Installation
 -------
 
-This node is available as an npm package (https://www.npmjs.com/package/node-red-m2x). Run the following command in the root directory of your Node-RED Directory
+This node is available as an npm package (https://www.npmjs.com/package/node-red-m2x). Run the following command in the root directory of your Node-RED Directory:
 
     npm install node-red-m2x
 
