@@ -1,4 +1,4 @@
-node-red-m2x
+Node-RED M2X Node
 =================
 A <a href="http://nodered.org" target="_new">Node-RED</a> node used to store time-series data in <a href="https://m2x.att.com" target="_new">AT&T M2X</a>. This node is also included out-of-the-box with <a href="http://flow.att.com">AT&T Flow Designer</a>.
 
