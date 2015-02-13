@@ -1,18 +1,19 @@
 node-red-m2x
 =================
-A <a href="http://nodered.org" target="_new">Node-RED</a> node used to store data in <a href="https://m2x.att.com" target="_new">AT&T M2X</a> using Node-RED or <a href="http://flow.att.com">AT&T Flow Designer</a>.
+A <a href="http://nodered.org" target="_new">Node-RED</a> node used to store time-series data in <a href="https://m2x.att.com" target="_new">AT&T M2X</a>. This node is also included out-of-the-box with <a href="http://flow.att.com">AT&T Flow Designer</a>.
 
 [AT&T M2X](http://m2x.att.com) is a cloud-based fully managed time-series data storage service for network connected machine-to-machine (M2M) devices and the Internet of Things (IoT).
 
 Installation
 -------
 
-Run the following command in the root directory of your Node-RED Directory
+This node is available as an npm package (https://www.npmjs.com/package/node-red-m2x). Run the following command in the root directory of your Node-RED Directory
 
     npm install node-red-m2x
 
 Usage
 -----
+Use node-red-m2x to store time-series data from anything in [AT&T M2X](http://m2x.att.com) and manage your M2X devices.
 
 <div>
 The user will set the following message properties:
@@ -423,6 +424,14 @@ msg.payload = { "stream": "heat",  <br>
     </pre>
     </div>
 </div>       
+
+## Helpful Resources ##
+
+* [Signup for an AT&T M2X Account](https://m2x.att.com/signup)
+* [M2X API Documentation](https://m2x.att.com/developer/documentation/overview)
+* [Get started with AT&T Flow Designer Account](https://flow.att.com/start)
+* [Node-RED Documentation](http://nodered.org/docs/)
+* [Running Node-Red](http://nodered.org/docs/getting-started/running.html)
 
 ## License ##
 
