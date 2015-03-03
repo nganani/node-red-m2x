@@ -1,5 +1,7 @@
 module.exports = function (RED) {
     var m2x = require('m2x');
+    var log = require('log-driver').logger;
+    var async = require('async');    
     var M2X_API_SERVER = "https://api-m2x.att.com/";
     // CF  - General Error code in case of error
     var ERROR_CODE = 500;
@@ -89,18 +91,43 @@ module.exports = function (RED) {
             }
             // Get list of parameters for that method
             var arguments = getParamNames(_this.m2xClient[topic][msg.action]);
-            var parameters = [];
-            // Iterate on all arguments and attach the relevnt parameters
-            //
-            for (var i = 0; i < arguments.length; i++) {
-                switch (arguments[i]) {
+            log.debug(arguments);
+            // Iterate on all arguments and attach the relevnt parameters          
+            async.map(  arguments,
+                        function(item, callback){
+                            try {
+                                var parameter = parse_argument(item, msg);     
+                                log.debug("PARAMETER "+ parameter);
+                                callback(null, parameter);
+                            } catch (e){
+                                log.debug("ERROR "+ e);
+                                callback(e, null);
+                            }
+                        },
+                        function(err, result) {
+                            if(!err) {                  
+                                call_m2x(result ,msg);                            
+                            } else {
+                                log.error("Could not invoke call to m2x since " +
+                                          "incoming node request could not be parsed, flow continued. [" +err + "]");                                
+                                var err_msg = {};
+                                err_msg.statusCode = INPUT_ERROR_CODE;
+                                err_msg.payload = err;
+                                _this.node.send(err_msg);
+                            }
+                        }
+            );            
+            
+            
+            function parse_argument(item, msg) {
+                switch (item) {
                     case "id":
                     case "key":
-                        set_parameter(msg, msg.topic_id, i, parameters, "msg.topic_id is empty  for " + msg.action);
+                        return set_parameter(msg, msg.topic_id, "msg.topic_id is empty  for " + msg.action);
                         break;
                     case 'params' :
                     case 'values':
-                        set_parameter(msg, msg.payload, i, parameters, "msg.payoad is empty  for " + msg.action);
+                        return set_parameter(msg, msg.payload, "msg.payoad is empty  for " + msg.action);
                         break;
                     case 'name' :
                     case 'triggerID':
@@ -109,25 +136,43 @@ module.exports = function (RED) {
                     case 'format':
                     case 'names':
                     case 'serial':
-                        set_parameter(msg, msg.sub_topic_id, i, parameters, "msg.sub_topic_id is empty  for " + msg.action);
+                        return set_parameter(msg, msg.sub_topic_id, "msg.sub_topic_id is empty  for " + msg.action);
                         break;
                     case 'callback':
-                        parameters[i] = function (error, response) {
+                        return  function (error, response) {
                             _this.handle_msg_response(msg, error, response);
                         };
                 }
             }
-            _this.m2xClient[topic][msg.action].apply(_this.m2xClient[topic], parameters);
+            
+            function call_m2x(parameters, msg){        
+                log.debug("TOPIC [" + topic + "] ACTIONS [" +msg.action + "]");
+                _this.m2xClient[topic][msg.action].apply(_this.m2xClient[topic], parameters, function(msg, response) {
+                        if(response && response.json) {
+                            try{ 
+                              log.debug("FINAL OUTPUT " +JSON.stringify(response.json));
+                              var res_msg = {};                               
+                              res_msg.payload = response.json;
+                              res_msg.statusCode = response.status;
+                            } catch(e) {
+                              log.error("Failed to parse "+response + " As JSON, will return error instead");
+                              res_msg.statusCode = OUTPUT_PARSE_ERROR;
+                              res_msg.payload = "Cannot extract M2X output";
+                            }
+                        }                        
+                        _this.node.send(res_msg);
+                });                     
+            };
         });
 
-        function set_parameter(msg, msg_field, i, parameters, error_msg) {
+        function set_parameter(msg, msg_field, error_msg) {
             if (typeof (msg_field) === 'undefined') {
                 _this.handle_msg_failure(msg, INPUT_ERROR_CODE, error_msg);
+                throw "Cannot find message field " + error_msg;
             } else {
-                parameters[i] = msg_field;
+                return msg_field;
             }
         }
-
         function validate_msg(msg, msg_field, regex, error_code, error_msg) {
             if (typeof (msg_field) === 'undefined') {
                 _this.handle_msg_failure(msg, error_code, error_msg);
