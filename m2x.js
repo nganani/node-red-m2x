@@ -219,8 +219,13 @@ module.exports = function (RED) {
                 this.error("General Error on M2X Flow");
                 this.handle_msg_failure(msg, ERROR_CODE, "Geneal Error");
             } else if (!is_msg_succeed(result.status)) {
-                this.handle_msg_failure(msg, result.status, 
-                    (!result.json.message ? "" : result.json.message));
+                var error_msg;
+                if (result.json && result.json.message) {
+                    error_msg = result.json.message;
+                } else {
+                    error_msg =  "Unknown Error";
+                }
+                this.handle_msg_failure(msg, result.status, error_msg);
             } else {
                 console.log("Successful M2X Api call [" + result.status + "]");
                 if (typeof (result.json) === 'undefined') {
