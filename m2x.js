@@ -35,7 +35,7 @@ module.exports = function (RED) {
             delete msg.sub_topic_id;
             delete msg.action;                
         } catch (e) {
-            console.log("WARNING - cannot delete msg input field, probably working on STRICT mode")
+           log.error("WARNING - cannot delete msg input field, probably working on STRICT mode")
         }
     }
     
@@ -68,7 +68,7 @@ module.exports = function (RED) {
                 if (typeof (_this.feedNode) === 'undefined') {
                     return _this.handle_msg_failure(msg, 409, "failure - missing M2X feed configuration and no mwx_key in msg");
                 }
-                console.log("Using configured X-M2X-KEY [" + _this.feedNode.apiKey + "]");
+                log.info("Using configured X-M2X-KEY [" + _this.feedNode.apiKey + "]");
                 _this.m2xClient = new m2x(_this.feedNode.apiKey, M2X_API_SERVER + API_VER);
             } else {
                 _this.m2xClient = new m2x(api_key, M2X_API_SERVER + API_VER);
@@ -80,7 +80,7 @@ module.exports = function (RED) {
             // Get all methods and validte against msg.action
             var methods = getAllMethods(_this.m2xClient[topic]);
             if (!msg.action || methods.indexOf(msg.action) === -1) {
-                 console.log("methods doesn't exists");
+                 log.error("methods doesn't exists");
                 _this.handle_msg_failure(msg, INPUT_ERROR_CODE, "action for " + topic + " must be either " + methods);
             }
             //TODO : validate why devices.listTriggers  pass this parttrig
@@ -218,7 +218,7 @@ module.exports = function (RED) {
             if (!result || !result.status) {
                 this.error("General Error on M2X Flow");
                 this.handle_msg_failure(msg, ERROR_CODE, "Geneal Error");
-            } else if (!is_msg_succeed(result.status)) {
+            } else if (result.isError()) {
                 var error_msg;
                 if (result.json && result.json.message) {
                     error_msg = result.json.message;
@@ -227,7 +227,7 @@ module.exports = function (RED) {
                 }
                 this.handle_msg_failure(msg, result.status, error_msg);
             } else {
-                console.log("Successful M2X Api call [" + result.status + "]");
+                log.info("Successful M2X Api call [" + result.status + "]");
                 if (typeof (result.json) === 'undefined') {
                     msg.payload = result;
                 } else {
